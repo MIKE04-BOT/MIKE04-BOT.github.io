@@ -64,6 +64,15 @@
         #weather, #location {
             margin-top: 20px;
         }
+        .contador {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
         @media (max-width: 600px) {
             header {
                 font-size: 1.2em;
@@ -102,8 +111,8 @@
         <div id="weather"></div>
     </section>
 
-    <section id="contador">
-        <h2>Contador de Visitas</h2>
+    <div class="contador">
+        
         <div id="sfc2en1kmw15ng7dhbx8h3krck4q8k5yy5f"></div>
         <script type="text/javascript" src="https://counter6.optistats.ovh/private/counter.js?c=2en1kmw15ng7dhbx8h3krck4q8k5yy5f&down=async" async></script>
         <noscript>
@@ -111,7 +120,7 @@
                 <img src="https://counter6.optistats.ovh/private/contadorvisitasgratis.php?c=2en1kmw15ng7dhbx8h3krck4q8k5yy5f" border="0" title="contador de visitas para web" alt="contador de visitas para web">
             </a>
         </noscript>
-    </section>
+    </div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
