@@ -3,83 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyecto 3</title>
+    <title>Ubicación y Clima en Tiempo Real</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            flex-wrap: wrap;
+        }
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+        }
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        section {
+            display: none;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #weather, #location {
+            margin-top: 20px;
+        }
+        .contador {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 600px) {
+            header {
+                font-size: 1.2em;
+                padding: 15px;
+            }
+            nav a {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            button {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Paginas WEB con Servidor</h1>
-        <nav>
-            <ul>
-                <li><a href="#seccion1">Sección 1</a></li>
-                <li><a href="#seccion2">Sección 2</a></li>
-                <li><a href="#seccion3">Sección 3</a></li>
-            </ul>
-        </nav>
+        Ubicación y Clima en Tiempo Real
     </header>
 
-    <main>
-        <section id="seccion1">
-            <h2>Sección 1: Texto y Enlaces</h2>
-            <p>Conoce tu ubicacion y el clima<a href="https://mike04-bot.github.io/">este enlace</a> para más información.</p>
-        </section>
+    <nav>
+        <a href="#" onclick="showSection('ubicacion')">Ubicación</a>
+        <a href="#" onclick="showSection('clima')">Clima</a>
+    </nav>
 
-        <section id="seccion2">
-            <h2>Sección 2: Listas y Tablas</h2>
-            <h3>Lista Ordenada</h3>
-            <ol>
-                <li>Elemento 1</li>
-                <li>Elemento 2</li>
-                <li>Elemento 3</li>
-            </ol>
+    <section id="ubicacion">
+        <h2>Ubicación en Tiempo Real</h2>
+        <div id="map"></div>
+        <div id="location"></div>
+    </section>
 
-            <h3>Lista Desordenada</h3>
-            <ul>
-                <li>Elemento A</li>
-                <li>Elemento B</li>
-                <li>Elemento C</li>
-            </ul>
+    <section id="clima">
+        <h2>Consulta del Clima en Tiempo Real</h2>
+        <button onclick="getLocation()">Obtener Clima Actual</button>
+        <div id="weather"></div>
+    </section>
 
-            <h3>Tabla</h3>
-            <table border="1">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Edad</th>
-                    <th>Ciudad</th>
-                </tr>
-                <tr>
-                    <td>Ana</td>
-                    <td>25</td>
-                    <td>Madrid</td>
-                </tr>
-                <tr>
-                    <td>Juan</td>
-                    <td>30</td>
-                    <td>Barcelona</td>
-                </tr>
-            </table>
-        </section>
+    <div class="contador">
+        <h2>Contador de Visitas</h2>
+        <div id="sfc2en1kmw15ng7dhbx8h3krck4q8k5yy5f"></div>
+        <script type="text/javascript" src="https://counter6.optistats.ovh/private/counter.js?c=2en1kmw15ng7dhbx8h3krck4q8k5yy5f&down=async" async></script>
+        <noscript>
+            <a href="https://www.contadorvisitasgratis.com" title="contador de visitas para web">
+                <img src="https://counter6.optistats.ovh/private/contadorvisitasgratis.php?c=2en1kmw15ng7dhbx8h3krck4q8k5yy5f" border="0" title="contador de visitas para web" alt="contador de visitas para web">
+            </a>
+        </noscript>
+    </div>
 
-        <section id="seccion3">
-            <h2>Sección 3: Imágenes y Formularios</h2>
-            <h3>Imagen</h3>
-            <img src="bkam.jpeg" width="30%" alt="Bkam">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Inicializa el mapa
+        let map;
 
-            <h3>Formulario</h3>
-            <form action="p3.php" method="post">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre">
-                <br>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email">
-                <br>
-                <input type="submit" value="Enviar">
-            </form>
-        </section>
-        
-    </main>
+        function initMap() {
+            map = L.map('map').setView([51.505, -0.09], 13);
 
-    <footer>
-        <p>&copy; 2024 Mi Página Web</p>
-    </footer>
+            // Carga el mapa de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+        }
+
+        // Función para obtener la ubicación actual
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocalización no es soportada por este navegador.");
+            }
+        }
+
+        // Muestra la posición en el mapa
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            // Centra el mapa en la ubicación actual
+            map.setView([lat, lon], 13);
+
+            // Agrega un marcador en la ubicación
+            L.marker([lat, lon]).addTo(map)
+                .bindPopup("Estás aquí")
+                .openPopup();
+
+            // Muestra la latitud y longitud
+            document.getElementById('location').innerHTML = `
+                <p>Latitud: ${lat}</p>
+                <p>Longitud: ${lon}</p>
+            `;
+
+            // Obtiene el clima
+            getWeather(lat, lon);
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("El usuario denegó la solicitud de geolocalización. Por favor, permite el acceso a la ubicación en la configuración del navegador.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("La información de ubicación no está disponible.");
+                    break;
+                case error.TIMEOUT:
+                    alert("La solicitud para obtener la ubicación ha caducado.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("Se ha producido un error desconocido.");
+                    break;
+            }
+        }
+
+        async function getWeather(lat, lon) {
+            const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.cod === 200) {
+                    document.getElementById('weather').innerHTML = `
+                        <h2>${data.name}, ${data.sys.country}</h2>
+                        <p>Temperatura: ${data.main.temp}°C</p>
+                        <p>Clima: ${data.weather[0].description}</p>
+                        <p>Humedad: ${data.main.humidity}%</p>
+                        <p>Viento: ${data.wind.speed} m/s</p>
+                    `;
+                } else {
+                    document.getElementById('weather').innerHTML = `<p>Ubicación no encontrada</p>`;
+                }
+            } catch (error) {
+                document.getElementById('weather').innerHTML = `<p>Error al obtener los datos</p>`;
+            }
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Muestra la sección de ubicación por defecto
+        showSection('ubicacion');
+        initMap();
+        getLocation(); // Solicita la ubicación al cargar la página
+    </script>
 </body>
 </html>
