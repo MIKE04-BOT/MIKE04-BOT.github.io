@@ -87,6 +87,22 @@
                 font-size: 0.9em;
             }
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -118,6 +134,30 @@
         <input type="text" id="city" placeholder="Ingresa el nombre de la ciudad">
         <button onclick="getWeatherByCity()">Consultar Clima</button>
         <div id="weatherResult"></div>
+        <div id="weatherResult">
+            <table id="weatherTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Ciudad</th>
+                        <th>País</th>
+                        <th>Temperatura (°C)</th>
+                        <th>Clima</th>
+                        <th>Humedad (%)</th>
+                        <th>Viento (m/s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="weatherDataRow">
+                        <td id="cityName"></td>
+                        <td id="countryName"></td>
+                        <td id="temperature"></td>
+                        <td id="weatherDescription"></td>
+                        <td id="humidity"></td>
+                        <td id="windSpeed"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <section id="registro">
@@ -194,7 +234,6 @@
             // Llama a la función para obtener el clima
             getWeather(lat, lon);
         }
-
         function showError(error) {
             switch(error.code) {
                 case error.PERMISSION_DENIED:
@@ -225,7 +264,7 @@
                         <h2>${data.name}, ${data.sys.country}</h2>
                         <p>Temperatura: ${data.main.temp}°C</p>
                         <p>Clima: ${data.weather[0].description}</p>
-                                                <p>Humedad: ${data.main.humidity}%</p>
+                        <p>Humedad: ${data.main.humidity}%</p>
                         <p>Viento: ${data.wind.speed} m/s</p>
                     `;
                 } else {
@@ -247,19 +286,24 @@
                 const data = await response.json();
 
                 if (data.cod === 200) {
-                    document.getElementById('weatherResult').innerHTML = `
-                        <h2>${data.name}, ${data.sys.country}</h2>
-                        <p>Temperatura: ${data.main.temp}°C</p>
-                        <p>Clima: ${data.weather[0].description}</p>
-                        <p>Humedad: ${data.main.humidity}%</p>
-                        <p>Viento: ${data.wind.speed} m/s</p>
-                    `;
+                    // Muestra los datos en la tabla
+                    document.getElementById('cityName').innerText = data.name;
+                    document.getElementById('countryName').innerText = data.sys.country;
+                    document.getElementById('temperature').innerText = data.main.temp;
+                    document.getElementById('weatherDescription').innerText = data.weather[0].description;
+                    document.getElementById('humidity').innerText = data.main.humidity;
+                    document.getElementById('windSpeed').innerText = data.wind.speed;
+
+                    // Muestra la tabla
+                    document.getElementById('weatherTable').style.display = 'table';
                 } else {
                     document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima: ${data.message}</p>`;
+                    document.getElementById('weatherTable').style.display = 'none'; // Oculta la tabla si hay un error
                 }
             } catch (error) {
                 console.error("Error al obtener el clima:", error);
                 document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima. Por favor, intenta de nuevo más tarde.</p>`;
+                document.getElementById('weatherTable').style.display = 'none'; // Oculta la tabla si hay un error
             }
         }
 
