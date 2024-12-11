@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         body {
-font-family: 'Arial', sans-serif;
+            font-family: 'Arial', sans-serif;
 margin: 0;
 padding: 0;
 background-color: #f4f4f4;
@@ -105,10 +105,11 @@ border: 2px solid #c8102e; /* Rojo */
 border-radius: 8px;
 }
     </style>
-<header>
-    SERVICIOS WEB
-</header>
+</head>
 <body>
+    <header>
+        SERVICIOS WEB
+    </header>
     <nav>
         <a href="#" onclick="showSection('ubicacion')">Ubicación</a>
         <a href="#" onclick="showSection('clima')">Clima</a>
@@ -161,6 +162,8 @@ border-radius: 8px;
             <label for="matricula">Matrícula:</label>
             <input type="text" id="matricula" required>
             <br>
+            <label for="archivo">Seleccionar Archivo:</label>
+            <input type="file" id="archivo" required>
             <button type="submit">Registrar</button>
         </form>
         <div id="formResponse"></div>
@@ -170,6 +173,7 @@ border-radius: 8px;
                 <tr>
                     <th>Nombre de Usuario</th>
                     <th>Matrícula</th>
+                    <th>Archivo</th>
                 </tr>
             </thead>
             <tbody id="dataTableBody"></tbody>
@@ -178,11 +182,15 @@ border-radius: 8px;
 
     <section id="multimedia" style="display: none;">
         <h2>Contenido Multimedia</h2>
-        <h3>Video de YouTube</h3>
-        <iframe width="560" height="315" src="https://www.youtube.com/watch?v=Tc72BLBI4AU" frameborder="0" allowfullscreen></iframe>
+        <h3>Video</h3>
+        <video width="560" height="315" controls>
+            <source src="video.mp4" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
         <h3>Descargar Imagen</h3>
         <a href="l.png" download>Descargar Imagen</a>
     </section>
+
     <div class="contador">
         <h2>Contador de Visitas</h2>
         <div id="sfc2en1kmw15ng7dhbx8h3krck4q8k5yy5f"></div>
@@ -199,98 +207,98 @@ border-radius: 8px;
         let map;
 
         function initMap() {
-            map = L.map('map').setView([            0, 0], 2); // Inicializa el mapa en una vista global
+            map = L.map('map').setView([0, 0], 2); // Inicializa el mapa en una vista global
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-}).addTo(map);
-}
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+        }
 
-function showSection(sectionId) {
-const sections = document.querySelectorAll('section');
-sections.forEach(section => {
-    section.style.display = 'none'; // Oculta todas las secciones
-});
-document.getElementById(sectionId).style.display = 'block'; // Muestra la sección seleccionada
-}
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.style.display = 'none'; // Oculta todas las secciones
+            });
+            document.getElementById(sectionId).style.display = 'block'; // Muestra la sección seleccionada
+        }
 
-function getLocation() {
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-} else {
-    document.getElementById('location').innerHTML = "Geolocalización no es soportada por este navegador.";
-}
-}
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById('location').innerHTML = "Geolocalización no es soportada por este navegador.";
+            }
+        }
 
-function showPosition(position) {
-const lat = position.coords.latitude;
-const lon = position.coords.longitude;
-document.getElementById('location').innerHTML = `Latitud: ${lat}, Longitud: ${lon}`;
-map.setView([lat, lon], 13); // Centra el mapa en la ubicación del usuario
-L.marker([lat, lon]).addTo(map); // Agrega un marcador en la ubicación
-getWeather(lat, lon); // Obtiene el clima en la ubicación
-}
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            document.getElementById('location').innerHTML = `Latitud: ${lat}, Longitud: ${lon}`;
+            map.setView([lat, lon], 13); // Centra el mapa en la ubicación del usuario
+            L.marker([lat, lon]).addTo(map); // Agrega un marcador en la ubicación
+            getWeather(lat, lon); // Obtiene el clima en la ubicación
+        }
 
-function showError(error) {
-switch(error.code) {
-    case error.PERMISSION_DENIED:
-        document.getElementById('location').innerHTML = "El usuario denegó la solicitud de Geolocalización."
-        break;
-    case error.POSITION_UNAVAILABLE:
-        document.getElementById('location').innerHTML = "La información de ubicación no está disponible."
-        break;
-    case error.TIMEOUT:
-        document.getElementById('location').innerHTML = "La solicitud para obtener la ubicación ha caducado."
-        break;
-    case error.UNKNOWN_ERROR:
-        document.getElementById('location').innerHTML = "Un error desconocido ocurrió."
-        break;
-}
-}
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById('location').innerHTML = "El usuario denegó la solicitud de Geolocalización.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById('location').innerHTML = "La información de ubicación no está disponible.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById('location').innerHTML = "La solicitud para obtener la ubicación ha caducado.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById('location').innerHTML = "Un error desconocido ocurrió.";
+                    break;
+            }
+        }
 
-async function getWeather(lat, lon) {
-const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
-const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`;
+        async function getWeather(lat, lon) {
+            const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`;
 
-try {
-    const response = await fetch(url);
-    const data = await response.json();
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
 
-    if (data.cod === 200) {
-        document.getElementById('weatherResult').innerHTML = `
-            <h2>${data.name}, ${data.sys.country}</h2>
-            <p>Temperatura: ${data.main.temp}°C</p>
-            <p>Clima: ${data.weather[0].description}</p>
-            <p>Humedad: ${data.main.humidity}%</p>
-            <p>Viento: ${data.wind.speed} m/s</p>
-        `;
-    } else {
-        document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima: ${data.message}</p>`;
-    }
-} catch (error) {
-    console.error("Error al obtener el clima:", error);
-    document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima. Por favor, intenta de nuevo más tarde.</p>`;
-}
-}
+                if (data.cod === 200) {
+                    document.getElementById('weatherResult').innerHTML = `
+                        <h2>${data.name}, ${data.sys.country}</h2>
+                        <p>Temperatura: ${data.main.temp}°C</p>
+                        <p>Clima: ${data.weather[0].description}</p>
+                        <p>Humedad: ${data.main.humidity}%</p>
+                        <p>Viento: ${data.wind.speed} m/s</p>
+                    `;
+                } else {
+                    document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima: ${data.message}</p>`;
+                }
+            } catch (error) {
+                console.error("Error al obtener el clima:", error);
+                document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima. Por favor, intenta de nuevo más tarde.</p>`;
+            }
+        }
 
-async function getWeatherByCity() {
-const city = document.getElementById('city').value;
-const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
-const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=es`;
+        async function getWeatherByCity() {
+            const city = document.getElementById('city').value;
+            const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=es`;
 
-try {
-    const response = await fetch(url);
-    const data = await response.json();
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
 
-    if (data.cod === 200) {
-        // Muestra los datos en la tabla
-        document.getElementById('cityName').innerText = data.name;
-        document.getElementById('countryName').innerText = data.sys.country;
-        document.getElementById('temperature').innerText = data.main.temp;
-        document.getElementById('weatherDescription').innerText = data.weather[0].description;
-        document.getElementById('humidity').innerText = data.main.humidity;
-        document.getElementById('windSpeed').innerText = data.wind.speed;
+                if (data.cod === 200) {
+                    // Muestra los datos en la tabla
+                    document.getElementById('cityName').innerText = data.name;
+                    document.getElementById('countryName').innerText = data.sys.country;
+                    document.getElementById('temperature').innerText = data.main.temp;
+                    document.getElementById('weatherDescription').innerText = data.weather[0].description;
+                    document.getElementById('humidity').innerText = data.main.humidity;
+                    document.getElementById('windSpeed').innerText = data.wind.speed;
                     document.getElementById('weatherTable').style.display = 'table'; // Muestra la tabla con los datos del clima
                     document.getElementById('weatherResult').innerHTML = ''; // Limpia el resultado anterior
                 } else {
@@ -308,9 +316,20 @@ try {
             event.preventDefault(); // Previene el envío del formulario
             const username = document.getElementById('username').value;
             const matricula = document.getElementById('matricula').value;
+            const archivoInput = document.getElementById('archivo');
+            const archivo = archivoInput.files[0];
+
+            // Verifica si se ha seleccionado un archivo
+            if (!archivo) {
+                document.getElementById('formResponse').innerHTML = `<p>Por favor, selecciona un archivo.</p>`;
+                return;
+            }
+
+            // Crea un objeto URL para el archivo
+            const fileURL = URL.createObjectURL(archivo);
 
             // Almacena los datos en localStorage
-            const userData = { username, matricula };
+            const userData = { username, matricula, fileURL, fileName: archivo.name };
             let users = JSON.parse(localStorage.getItem('users')) || [];
             users.push(userData);
             localStorage.setItem('users', JSON.stringify(users));
@@ -328,7 +347,11 @@ try {
 
             users.forEach(user => {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td>${user.username}</td><td>${user.matricula}</td>`;
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.matricula}</td>
+                    <td><a href="${user.fileURL}" download="${user.fileName}">Descargar ${user.fileName}</a></td>
+                `;
                 dataTableBody.appendChild(row);
             });
         }
