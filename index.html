@@ -7,308 +7,274 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-            text-align: center;
-        }
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            font-size: 1.5em;
-        }
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: #333;
-            flex-wrap: wrap;
-        }
-        nav a {
-            color: white;
-            padding: 14px 20px;
-            text-decoration: none;
-            text-align: center;
-            flex: 1;
-        }
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-        section {
-            display: none;
-            margin: 20px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #map {
-            height: 400px;
-            width: 100%;
-            border-radius: 10px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #weather, #location {
-            margin-top: 20px;
-        }
-        .contador {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background-color: white;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        @media (max-width: 600px) {
-            header {
-                font-size: 1.2em;
-                padding: 15px;
-            }
-            nav a {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-            button {
-                padding: 8px 16px;
-                font-size: 0.9em;
-            }
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
+font-family: 'Arial', sans-serif;
+margin: 0;
+padding: 0;
+background-color: #f4f4f4;
+color: #333;
+}
+nav {
+background-color: #c8102e; /* Rojo */
+color: white;
+padding: 15px;
+display: flex;
+justify-content: space-around;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+nav a {
+color: white;
+text-decoration: none;
+padding: 10px 15px;
+border-radius: 5px;
+transition: background-color 0.3s;
+}
+nav a:hover {
+background-color: #a50d24; /* Rojo más oscuro */
+}
+section {
+padding: 20px;
+margin: 20px;
+background-color: white;
+border-radius: 8px;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+h2 {
+color: #c8102e; /* Rojo */
+}
+#map {
+height: 400px;
+width: 100%;
+border-radius: 8px;
+margin-top: 10px;
+}
+input[type="text"], button {
+padding: 10px;
+margin: 5px 0;
+border: 1px solid #ccc;
+border-radius: 5px;
+width: calc(100% - 22px);
+}
+button {
+background-color: #c8102e; /* Rojo */
+color: white;
+border: none;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+button:hover {
+background-color: #a50d24; /* Rojo más oscuro */
+}
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 10px;
+}
+th, td {
+padding: 10px;
+text-align: left;
+border-bottom: 1px solid #ddd;
+}
+th {
+background-color: #c8102e; /* Rojo */
+color: white;
+}
+tr:hover {
+background-color: #f1f1f1;
+}
+#formResponse {
+margin-top: 10px;
+color: #c8102e; /* Rojo */
+}
+/* Estilo adicional para mejorar la apariencia */
+input[type="text"] {
+border: 1px solid #c8102e; /* Rojo */
+}
+input[type="text"]:focus {
+border-color: #a50d24; /* Rojo más oscuro */
+outline: none;
+}
+/* Estilo para el iframe */
+iframe {
+border: 2px solid #c8102e; /* Rojo */
+border-radius: 8px;
+}
     </style>
 </head>
 <body>
-    <header>
-        SERVICIOS WEB
-    </header>
-
     <nav>
         <a href="#" onclick="showSection('ubicacion')">Ubicación</a>
         <a href="#" onclick="showSection('clima')">Clima</a>
-        <a href="#" onclick="showSection('consulta')">Consulta por Ciudad</a>
-        <a href="#" onclick="showSection('registro')">Registro de Usuario</a>
-        <a href="#" onclick="showSection('registroDatos')">Registro de Datos</a>
+        <a href="#" onclick="showSection('registro')">Registro</a>
+        <a href="#" onclick="showSection('multimedia')">Multimedia</a>
     </nav>
 
     <section id="ubicacion">
-        <h2>Ubicación en Tiempo Real</h2>
-        <div id="map"></div>
+        <h2>Tu Ubicación</h2>
+        <button onclick="getLocation()">Obtener mi ubicación</button>
         <div id="location"></div>
+        <div id="map"></div>
     </section>
 
-    <section id="clima">
-        <h2>Consulta del Clima en Tiempo Real</h2>
-        <button onclick="getLocation()">Obtener Clima Actual</button>
-        <div id="weather"></div>
-    </section>
-
-    <section id="consulta">
-        <h2>Consulta del Clima por Ciudad</h2>
-        <input type="text" id="city" placeholder="Ingresa el nombre de la ciudad">
+    <section id="clima" style="display: none;">
+        <h2>Consulta del Clima</h2>
+        <input type="text" id="city" placeholder="Ingresa una ciudad">
         <button onclick="getWeatherByCity()">Consultar Clima</button>
         <div id="weatherResult"></div>
-        <div id="weatherResult">
-            <table id="weatherTable" style="display: none;">
-                <thead>
-                    <tr>
-                        <th>Ciudad</th>
-                        <th>País</th>
-                        <th>Temperatura (°C)</th>
-                        <th>Clima</th>
-                        <th>Humedad (%)</th>
-                        <th>Viento (m/s)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="weatherDataRow">
-                        <td id="cityName"></td>
-                        <td id="countryName"></td>
-                        <td id="temperature"></td>
-                        <td id="weatherDescription"></td>
-                        <td id="humidity"></td>
-                        <td id="windSpeed"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section id="registro">
-        <h2>Registro de Usuario</h2>
-        <form id="registrationForm" onsubmit="submitForm(event)">
-            <label for="username">Nombre de Usuario:</label>
-            <input type="text" id="username" name="username" required>
-            <br><br>
-            <label for="matricula">Matricula:</label>
-            <input type="text" id="matricula" name="matricula" required>
-            <br><br>
-            <input type="submit" value="Registrar">
-        </form>
-        <div id="formResponse"></div>
-        <img src="l.png" alt="Registro de Usuario Exitoso" style="margin-bottom: 20px;">
-    </section>
-
-    <section id="registroDatos" style="display: none;">
-        <h2>Registro de Datos Enviados</h2>
-        <table id="dataTable">
+        <table id="weatherTable" style="display: none;">
             <thead>
                 <tr>
-                    <th>Nombre de Usuario</th>
-                    <th>Matricula</th>
+                    <th>Ciudad</th>
+                    <th>País</th>
+                    <th>Temperatura (°C)</th>
+                    <th>Descripción</th>
+                    <th>Humedad (%)</th>
+                    <th>Velocidad del Viento (m/s)</th>
                 </tr>
             </thead>
-            <tbody id="dataTableBody">
-                <!-- Aquí se agregarán las filas de datos -->
+            <tbody>
+                <tr>
+                    <td id="cityName"></td>
+                    <td id="countryName"></td>
+                    <td id="temperature"></td>
+                    <td id="weatherDescription"></td>
+                    <td id="humidity"></td>
+                    <td id="windSpeed"></td>
+                </tr>
             </tbody>
         </table>
     </section>
 
-    <div class="contador">
-        <h2>Contador de Visitas</h2>
-        <div id="sfc2en1kmw15ng7dhbx8h3krck4q8k5yy5f"></div>
-        <script type="text/javascript" src="https://counter6.optistats.ovh/private/counter.js?c=2en1kmw15ng7dhbx8h3krck4q8k5yy5f&down=async" async></script>
-        <noscript>
-            <a href="https://www.contadorvisitasgratis.com" title="contador de visitas para web">
-                <img src="https://counter6.optistats.ovh/private/contadorvisitasgratis.php?c=2en1kmw15ng7dhbx8h3krck4q8k5yy5f" border="0" title="contador de visitas para web" alt="contador de visitas para web">
-            </a>
-        </noscript>
-    </div>
+    <section id="registro" style="display: none;">
+        <h2>Registro de Usuario</h2>
+        <form id="registrationForm" onsubmit="submitForm(event)">
+            <label for="username">Nombre de Usuario:</label>
+            <input type="text" id="username" required>
+            <br>
+            <label for="matricula">Matrícula:</label>
+            <input type="text" id="matricula" required>
+            <br>
+            <button type="submit">Registrar</button>
+        </form>
+        <div id="formResponse"></div>
+        <h3>Registros:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre de Usuario</th>
+                    <th>Matrícula</th>
+                </tr>
+            </thead>
+            <tbody id="dataTableBody"></tbody>
+        </table>
+    </section>
+
+    <section id="multimedia" style="display: none;">
+        <h2>Contenido Multimedia</h2>
+        <h3>Video de YouTube</h3>
+        <iframe width="560" height="315" src="https://www.youtube.com/watch?v=Tc72BLBI4AU" frameborder="0" allowfullscreen></iframe>
+        <h3>Descargar Imagen</h3>
+        <a href="l.png" download>Descargar Imagen</a>
+    </section>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        // Inicializa el mapa
         let map;
 
         function initMap() {
-            map = L.map('map').setView([51.505, -0.09], 13);
+            map = L.map('map').setView([            0, 0], 2); // Inicializa el mapa en una vista global
 
-            // Carga el mapa de OpenStreetMap
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-            }).addTo(map);
-        }
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+}
 
-        // Función para obtener la ubicación actual
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            } else {
-                alert("Geolocalización no es soportada por este navegador.");
-            }
-        }
+function showSection(sectionId) {
+const sections = document.querySelectorAll('section');
+sections.forEach(section => {
+    section.style.display = 'none'; // Oculta todas las secciones
+});
+document.getElementById(sectionId).style.display = 'block'; // Muestra la sección seleccionada
+}
 
-        // Muestra la posición en el mapa
-        function showPosition(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+function getLocation() {
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition, showError);
+} else {
+    document.getElementById('location').innerHTML = "Geolocalización no es soportada por este navegador.";
+}
+}
 
-            // Centra el mapa en la ubicación actual
-            map.setView([lat, lon], 13);
+function showPosition(position) {
+const lat = position.coords.latitude;
+const lon = position.coords.longitude;
+document.getElementById('location').innerHTML = `Latitud: ${lat}, Longitud: ${lon}`;
+map.setView([lat, lon], 13); // Centra el mapa en la ubicación del usuario
+L.marker([lat, lon]).addTo(map); // Agrega un marcador en la ubicación
+getWeather(lat, lon); // Obtiene el clima en la ubicación
+}
 
-            // Agrega un marcador en la ubicación
-            L.marker([lat, lon]).addTo(map)
-                .bindPopup("Estás aquí")
-                .openPopup();
+function showError(error) {
+switch(error.code) {
+    case error.PERMISSION_DENIED:
+        document.getElementById('location').innerHTML = "El usuario denegó la solicitud de Geolocalización."
+        break;
+    case error.POSITION_UNAVAILABLE:
+        document.getElementById('location').innerHTML = "La información de ubicación no está disponible."
+        break;
+    case error.TIMEOUT:
+        document.getElementById('location').innerHTML = "La solicitud para obtener la ubicación ha caducado."
+        break;
+    case error.UNKNOWN_ERROR:
+        document.getElementById('location').innerHTML = "Un error desconocido ocurrió."
+        break;
+}
+}
 
-            // Muestra la latitud y longitud
-            document.getElementById('location').innerHTML = `
-                <p>Latitud: ${lat}</p>
-                <p>Longitud: ${lon}</p>
-            `;
-                        // Llama a la función para obtener el clima
-                        getWeather(lat, lon);
-        }
+async function getWeather(lat, lon) {
+const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
+const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`;
 
-        function showError(error) {
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("El usuario denegó la solicitud de geolocalización. Por favor, permite el acceso a la ubicación en la configuración del navegador.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("La información de ubicación no está disponible.");
-                    break;
-                case error.TIMEOUT:
-                    alert("La solicitud para obtener la ubicación ha caducado.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("Se ha producido un error desconocido.");
-                    break;
-            }
-        }
+try {
+    const response = await fetch(url);
+    const data = await response.json();
 
-        async function getWeather(lat, lon) {
-            const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
-            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`;
+    if (data.cod === 200) {
+        document.getElementById('weatherResult').innerHTML = `
+            <h2>${data.name}, ${data.sys.country}</h2>
+            <p>Temperatura: ${data.main.temp}°C</p>
+            <p>Clima: ${data.weather[0].description}</p>
+            <p>Humedad: ${data.main.humidity}%</p>
+            <p>Viento: ${data.wind.speed} m/s</p>
+        `;
+    } else {
+        document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima: ${data.message}</p>`;
+    }
+} catch (error) {
+    console.error("Error al obtener el clima:", error);
+    document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima. Por favor, intenta de nuevo más tarde.</p>`;
+}
+}
 
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
+async function getWeatherByCity() {
+const city = document.getElementById('city').value;
+const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
+const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=es`;
 
-                if (data.cod === 200) {
-                    document.getElementById('weather').innerHTML = `
-                        <h2>${data.name}, ${data.sys.country}</h2>
-                        <p>Temperatura: ${data.main.temp}°C</p>
-                        <p>Clima: ${data.weather[0].description}</p>
-                        <p>Humedad: ${data.main.humidity}%</p>
-                        <p>Viento: ${data.wind.speed} m/s</p>
-                    `;
-                } else {
-                    document.getElementById('weather').innerHTML = `<p>Error al obtener el clima: ${data.message}</p>`;
-                }
-            } catch (error) {
-                console.error("Error al obtener el clima:", error);
-                document.getElementById('weather').innerHTML = `<p>Error al obtener el clima. Por favor, intenta de nuevo más tarde.</p>`;
-            }
-        }
+try {
+    const response = await fetch(url);
+    const data = await response.json();
 
-        async function getWeatherByCity() {
-            const city = document.getElementById('city').value;
-            const apiKey = '99408c6f7be966c949c2fbf6230844bd'; // Reemplaza con tu clave API de OpenWeatherMap
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=es`;
-
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (data.cod === 200) {
-                    // Muestra los datos en la tabla
-                    document.getElementById('cityName').innerText = data.name;
-                    document.getElementById('countryName').innerText = data.sys.country;
-                    document.getElementById('temperature').innerText = data.main.temp;
-                    document.getElementById('weatherDescription').innerText = data.weather[0].description;
-                    document.getElementById('humidity').innerText = data.main.humidity;
-                    document.getElementById('windSpeed').innerText = data.wind.speed;
-
-                    // Muestra la tabla
-                    document.getElementById('weatherTable').style.display = 'table';
+    if (data.cod === 200) {
+        // Muestra los datos en la tabla
+        document.getElementById('cityName').innerText = data.name;
+        document.getElementById('countryName').innerText = data.sys.country;
+        document.getElementById('temperature').innerText = data.main.temp;
+        document.getElementById('weatherDescription').innerText = data.weather[0].description;
+        document.getElementById('humidity').innerText = data.main.humidity;
+        document.getElementById('windSpeed').innerText = data.wind.speed;
+                    document.getElementById('weatherTable').style.display = 'table'; // Muestra la tabla con los datos del clima
+                    document.getElementById('weatherResult').innerHTML = ''; // Limpia el resultado anterior
                 } else {
                     document.getElementById('weatherResult').innerHTML = `<p>Error al obtener el clima: ${data.message}</p>`;
                     document.getElementById('weatherTable').style.display = 'none'; // Oculta la tabla si hay un error
@@ -320,60 +286,40 @@
             }
         }
 
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
-            if (sectionId === 'ubicacion') {
-                initMap();
-                getLocation();
-            }
-        }
-
-        const registros = []; // Array para almacenar los registros
-
         function submitForm(event) {
-            event.preventDefault(); // Evita el envío del formulario
-
+            event.preventDefault(); // Previene el envío del formulario
             const username = document.getElementById('username').value;
             const matricula = document.getElementById('matricula').value;
 
-                    // Agrega el registro al array
-                    registros.push({ username, matricula });
+            // Almacena los datos en localStorage
+            const userData = { username, matricula };
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push(userData);
+            localStorage.setItem('users', JSON.stringify(users));
 
-// Muestra el registro en la sección de datos enviados
-updateDataTable();
+            // Muestra la respuesta
+            document.getElementById('formResponse').innerHTML = `<p>Usuario registrado: ${username}</p>`;
+            document.getElementById('registrationForm').reset(); // Resetea el formulario
+            displayUsers(); // Muestra los usuarios registrados
+        }
 
-// Simulación de envío de datos
-document.getElementById('formResponse').innerHTML = `
-    <p>Registro exitoso para ${username} con la matrícula ${matricula}.</p>
-`;
+        function displayUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const dataTableBody = document.getElementById('dataTableBody');
+            dataTableBody.innerHTML = ''; // Limpia la tabla antes de mostrar los usuarios
 
-// Limpiar el formulario
-document.getElementById('registrationForm').reset();
-}
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${user.username}</td><td>${user.matricula}</td>`;
+                dataTableBody.appendChild(row);
+            });
+        }
 
-function updateDataTable() {
-const dataTableBody = document.getElementById('dataTableBody');
-dataTableBody.innerHTML = ''; // Limpia la tabla antes de agregar nuevos registros
-
-registros.forEach(registro => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${registro.username}</td>
-        <td>${registro.matricula}</td>
-    `;
-    dataTableBody.appendChild(row);
-});
-}
-
-// Inicializa el mapa y muestra la sección de ubicación al cargar
-window.onload = function() {
-showSection('ubicacion');
-};
-</script>
+        // Inicializa el mapa al cargar la página
+        window.onload = function() {
+            initMap();
+            displayUsers(); // Muestra los usuarios registrados al cargar la página
+        };
+    </script>
 </body>
 </html>
-           
